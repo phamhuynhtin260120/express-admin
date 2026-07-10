@@ -104,6 +104,175 @@ Phạm vi dữ liệu mặc định:
 - Sales Manager có được tự thay đổi giới hạn hay giới hạn phải do Ban Lãnh Đạo phê duyệt.
 - Giá gốc và giới hạn deal có thời gian hiệu lực hay không.
 
+### 3.5. Khung phân tích các nhóm account còn lại
+
+**Trạng thái: Đề xuất để tiếp tục thảo luận**
+
+Mỗi nhóm account được phân tích theo năm yếu tố:
+
+1. Phạm vi dữ liệu được phép xem.
+2. Hành động được phép thực hiện.
+3. Giới hạn nghiệp vụ.
+4. Hành động cần phê duyệt hoặc không được tự phê duyệt.
+5. Dữ liệu bắt buộc lưu audit log.
+
+#### Ban Lãnh Đạo
+
+**Trạng thái: Đã xác nhận đối với flow phê duyệt giá; các quyền khác vẫn là đề xuất**
+
+Phạm vi:
+
+- Xem dashboard, doanh thu, chi phí, lợi nhuận, công nợ và hiệu suất toàn công ty hoặc theo chi nhánh.
+- Xem giá gốc, giá bán và biên lợi nhuận.
+- Tiếp nhận dữ liệu giá hãng đã được Pricing thu thập và chuẩn hóa.
+- Xem xét, điều chỉnh nếu cần và chốt giá gốc chính thức của công ty.
+- Trả kết quả phê duyệt cho Pricing để Pricing công bố đến các phòng ban liên quan.
+- Thiết lập chính sách biên lợi nhuận, mức giảm giá và hạn mức phê duyệt.
+- Phê duyệt các trường hợp ngoại lệ có ảnh hưởng lớn đến lợi nhuận hoặc rủi ro tài chính.
+- Không nhất thiết trực tiếp chỉnh sửa dữ liệu vận hành hằng ngày.
+
+Các nội dung cần làm rõ:
+
+- Ban Lãnh Đạo là một role chung hay gồm Giám đốc, Phó giám đốc và quản lý chi nhánh với phạm vi khác nhau.
+- Những ngưỡng nào bắt buộc chuyển lên Ban Lãnh Đạo phê duyệt.
+- Thành viên nào của Ban Lãnh Đạo được chốt giá và có cần nhiều cấp duyệt hay không.
+
+#### Pricing
+
+**Trạng thái: Đã xác nhận đối với flow thu thập và phân phối giá; các quyền khác vẫn là đề xuất**
+
+Phạm vi:
+
+- Tiếp nhận yêu cầu kiểm tra giá từ Sales.
+- Thu thập giá từ các hãng.
+- Quản lý giá đầu vào theo hãng, tuyến, dịch vụ và thời gian hiệu lực.
+- Quản lý phụ phí, loại tiền tệ và điều kiện áp dụng.
+- Chuẩn hóa và so sánh phương án từ nhiều hãng.
+- Lập bộ giá đề xuất và gửi Ban Lãnh Đạo xem xét.
+- Nhận giá gốc đã được Ban Lãnh Đạo chốt.
+- Công bố và gửi giá đã duyệt đến các phòng ban liên quan theo đúng phạm vi được phép.
+- Xem thông tin nhu cầu của khách hàng nhưng không mặc định được xem toàn bộ dữ liệu CRM nhạy cảm.
+
+Giới hạn đề xuất:
+
+- Không tự ý thay đổi giá của báo giá đã phát hành.
+- Không được công bố giá đang chờ Ban Lãnh Đạo phê duyệt.
+- Không được tự thay đổi giá gốc đã được Ban Lãnh Đạo chốt; nếu cần thay đổi phải tạo phiên bản mới và gửi duyệt lại.
+- Không trực tiếp bàn giao khách hàng.
+- Mọi thay đổi giá gốc phải lưu phiên bản, thời gian hiệu lực và người thực hiện.
+
+Flow giá đã xác nhận:
+
+```text
+Pricing thu thập giá từ hãng
+→ Pricing chuẩn hóa, so sánh và lập bộ giá đề xuất
+→ Gửi Ban Lãnh Đạo
+→ Ban Lãnh Đạo xem xét và chốt giá gốc
+→ Trả giá đã duyệt cho Pricing
+→ Pricing công bố đến các phòng ban liên quan
+→ Các phòng ban sử dụng giá theo quyền và thời gian hiệu lực
+```
+
+Trạng thái giá đề xuất:
+
+- **Draft:** Pricing đang tổng hợp.
+- **Pending Approval:** Đã gửi Ban Lãnh Đạo, chưa được phép sử dụng.
+- **Rejected:** Ban Lãnh Đạo từ chối và yêu cầu điều chỉnh.
+- **Approved:** Ban Lãnh Đạo đã chốt nhưng Pricing chưa công bố.
+- **Published:** Pricing đã công bố và các phòng ban được phép sử dụng.
+- **Expired:** Giá đã hết thời gian hiệu lực.
+- **Superseded:** Giá đã được thay thế bởi một phiên bản mới.
+
+Mỗi lần gửi duyệt, từ chối, chốt hoặc công bố phải lưu người thực hiện, thời gian, phiên bản giá, ghi chú và phòng ban nhận giá.
+
+#### Operations và Pickup
+
+Phạm vi đề xuất:
+
+- Xem booking và shipment được giao cho mình hoặc team mình.
+- Tiếp nhận kế hoạch pickup.
+- Cập nhật trạng thái lấy hàng, vận chuyển, giao hàng và sự cố.
+- Tải lên chứng từ, hình ảnh giao nhận hoặc bill liên quan.
+- Phối hợp với Customer Service khi shipment bị trễ hoặc phát sinh sự cố.
+
+Giới hạn đề xuất:
+
+- Không được xem giá gốc, margin hoặc công nợ nếu không phục vụ trực tiếp cho công việc.
+- Không được sửa giá bán hoặc thông tin tài chính đã xác nhận.
+- Không được tự hủy booking hoặc shipment nếu quy trình yêu cầu cấp quản lý phê duyệt.
+
+Các nội dung cần làm rõ:
+
+- Pickup là role độc lập hay một nhóm con thuộc Operations.
+- Nhân viên được tự nhận việc hay công việc do Dispatcher/Operations Manager phân công.
+- Trạng thái nào nhân viên được phép cập nhật và trạng thái nào cần quản lý xác nhận.
+
+#### Customer Service
+
+Phạm vi đề xuất:
+
+- Xem thông tin liên hệ của khách hàng và các shipment được giao chăm sóc.
+- Theo dõi hành trình và cập nhật trạng thái cho khách hàng.
+- Gửi thông báo qua các kênh công ty cho phép.
+- Tiếp nhận, phân loại và xử lý yêu cầu hoặc khiếu nại.
+- Ghi nhận lịch sử trao đổi và mức độ hài lòng của khách hàng.
+- Phối hợp với Sales và Operations khi có sự cố.
+
+Giới hạn đề xuất:
+
+- Không mặc định được xem giá gốc hoặc biên lợi nhuận.
+- Không được cam kết giảm giá hoặc bồi thường ngoài hạn mức cho phép.
+- Nội dung gửi hàng loạt hoặc nội dung nhạy cảm có thể cần phê duyệt.
+
+#### Accounting
+
+Phạm vi đề xuất:
+
+- Xem booking, shipment và thông tin khách hàng cần thiết để lập hóa đơn và đối soát.
+- Tạo hóa đơn, ghi nhận thanh toán và theo dõi công nợ.
+- Quản lý hạn thanh toán và hạn mức tín dụng.
+- Xác nhận dữ liệu được AI trích xuất từ bill hoặc hóa đơn trước khi ghi nhận kế toán.
+- Gửi hoặc lên lịch cảnh báo công nợ.
+- Xem doanh thu, chi phí và lợi nhuận theo phạm vi được giao.
+
+Giới hạn và kiểm soát đề xuất:
+
+- Không xóa chứng từ đã phát hành; việc điều chỉnh phải tạo lịch sử hoặc chứng từ thay thế.
+- Người tạo khoản thanh toán không nên tự phê duyệt khoản thanh toán đó nếu công ty áp dụng nguyên tắc tách nhiệm vụ.
+- Thay đổi công nợ, hạn mức tín dụng và trạng thái thanh toán phải có audit log.
+- Các khoản xóa nợ, giảm nợ hoặc điều chỉnh lớn phải qua cấp có thẩm quyền phê duyệt.
+
+#### Admin hệ thống
+
+Phạm vi đề xuất:
+
+- Tạo, kích hoạt, khóa và ngừng hoạt động account.
+- Gán role, team, chi nhánh và phạm vi dữ liệu.
+- Cấu hình quyền sử dụng các tính năng và kênh tích hợp.
+- Xem audit log phục vụ quản trị và bảo mật.
+
+Giới hạn đề xuất:
+
+- Quyền quản trị kỹ thuật không mặc nhiên đồng nghĩa với quyền phê duyệt nghiệp vụ.
+- Admin không nên tự sửa giá, công nợ hoặc kết quả kinh doanh chỉ vì có quyền quản trị hệ thống.
+- Các thao tác giả lập người dùng hoặc truy cập dữ liệu nhạy cảm phải được ghi log đặc biệt.
+
+### 3.6. Luồng phối hợp account
+
+**Trạng thái: Đã xác nhận đối với flow giá; các bước sau báo giá vẫn là đề xuất**
+
+```text
+Pricing thu thập và chuẩn hóa giá hãng
+→ Ban Lãnh Đạo chốt giá gốc
+→ Pricing công bố giá đã duyệt
+→ Sales Manager thiết lập phạm vi deal
+→ Sales Representative tư vấn và báo giá khách hàng
+→ Operations/Pickup thực hiện booking và vận chuyển
+→ Customer Service theo dõi và giao tiếp với khách hàng
+→ Accounting xuất hóa đơn, ghi nhận thanh toán và theo dõi công nợ
+→ Ban Lãnh Đạo theo dõi báo cáo và phê duyệt ngoại lệ
+```
+
 ## 4. Các phân hệ chính
 
 **Trạng thái: Đã xác nhận ở mức tổng quan**
@@ -385,11 +554,16 @@ Các điểm cần chốt tiếp theo:
 10. Nơi lưu, quy trình xác nhận và liên kết dữ liệu được AI trích xuất từ bill hoặc hóa đơn.
 11. Ý nghĩa và công thức của phần trăm tối thiểu/tối đa trong cơ chế deal giá của Sales.
 12. Phạm vi team của Sales Manager và quy trình phê duyệt khi Sales muốn báo giá ngoài giới hạn.
+13. Phạm vi quyền chi tiết của Ban Lãnh Đạo, Pricing, Operations/Pickup, Customer Service, Accounting và Admin.
+14. Các ngưỡng phê duyệt và nguyên tắc tách người tạo với người duyệt ở từng nghiệp vụ.
+15. Danh sách phòng ban nhận từng loại giá và mức độ chi tiết mà mỗi phòng ban được phép xem.
 
 ## 12. Nhật ký cập nhật
 
 | Ngày | Nội dung |
 |---|---|
+| 2026-07-10 | Xác nhận flow Pricing thu thập giá hãng, Ban Lãnh Đạo chốt giá gốc và Pricing công bố giá đã duyệt đến các phòng ban liên quan. |
+| 2026-07-10 | Bổ sung khung đề xuất để phân tích quyền của Ban Lãnh Đạo, Pricing, Operations/Pickup, Customer Service, Accounting và Admin hệ thống. |
 | 2026-07-10 | Bổ sung phân cấp Sales Manager và Sales Representative, phạm vi khách hàng, quyền bàn giao, giới hạn deal giá và các kênh chăm sóc khách hàng. |
 | 2026-07-10 | Bổ sung tính năng tải hình ảnh bill hoặc hóa đơn, dùng AI trích xuất dữ liệu và chờ xác định nơi lưu sau bước kiểm tra. |
 | 2026-07-10 | Khởi tạo tài liệu từ nội dung thảo luận ban đầu: tổng quan hệ thống, actors, CRM, phân công Sales, giá, booking, đơn hàng, công nợ và email cảnh báo. |
