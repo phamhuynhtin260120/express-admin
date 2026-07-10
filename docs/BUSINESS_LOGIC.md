@@ -270,14 +270,18 @@ Các nội dung cần làm rõ:
 
 #### Customer Service
 
-**Trạng thái: Đề xuất để thảo luận**
+**Trạng thái: Đã xác nhận nguyên tắc phân cấp Customer Manager/Customer Sale; chi tiết flow vẫn là đề xuất**
 
-Nhóm Customer Service có thể được phân thành hai cấp account:
+Nhóm Customer Service được phân thành hai cấp account:
 
-##### Customer Service Manager
+##### Customer Manager
+
+Customer Manager có cơ chế quản lý tương tự Sales Manager nhưng chỉ thực hiện các chức năng thuộc nghiệp vụ Customer Service. Manager có phạm vi theo team và không mặc nhiên có các quyền của Sales, Pricing, Operations hoặc Accounting.
 
 - Xem khách hàng, shipment, yêu cầu hỗ trợ và khiếu nại thuộc team hoặc phạm vi quản lý.
-- Phân công Customer Service Staff phụ trách khách hàng hoặc từng vụ việc.
+- Xem từng khách hàng, ticket và hoạt động chăm sóc đang thuộc Customer Sale nào trong team.
+- Phân công Customer Sale phụ trách khách hàng hoặc từng vụ việc.
+- Bàn giao khách hàng, ticket hoặc trách nhiệm chăm sóc từ Customer Sale này sang Customer Sale khác.
 - Điều phối lại người phụ trách khi có quá tải, nghỉ phép hoặc sự cố.
 - Theo dõi thời gian phản hồi, thời gian xử lý và chất lượng chăm sóc.
 - Phê duyệt nội dung gửi hàng loạt, nội dung nhạy cảm hoặc chương trình chăm sóc theo quyền được cấp.
@@ -285,7 +289,11 @@ Nhóm Customer Service có thể được phân thành hai cấp account:
 - Chuyển các trường hợp vượt hạn mức đến Ban Lãnh Đạo, Accounting, Sales Manager hoặc Operations Manager.
 - Xem báo cáo khiếu nại, nguyên nhân sự cố và mức độ hài lòng của khách hàng.
 
-##### Customer Service Staff
+Việc phân công hoặc bàn giao phải lưu nhân viên cũ, nhân viên mới, thời điểm hiệu lực, người thực hiện, lý do và đối tượng được bàn giao.
+
+##### Customer Sale
+
+Customer Sale là cấp dưới trực tiếp của Customer Manager và thuộc bộ phận Customer Service. Tên gọi này không đồng nghĩa với Saler thuộc bộ phận Sales.
 
 - Chỉ xem khách hàng, shipment và yêu cầu hỗ trợ được giao cho mình, trừ khi được cấp phạm vi theo team.
 - Xem thông tin liên hệ và lịch sử trao đổi cần thiết để phục vụ khách hàng.
@@ -296,13 +304,15 @@ Nhóm Customer Service có thể được phân thành hai cấp account:
 - Ghi nhận toàn bộ trao đổi, cam kết và kết quả xử lý.
 - Gửi khảo sát và ghi nhận mức độ hài lòng sau khi hoàn tất.
 
+Customer Sale không mặc định sở hữu khách hàng theo cơ chế Sales, không được deal giá và không được hưởng các quyền của Sales Representative. Trách nhiệm chính là chăm sóc, hỗ trợ và theo dõi khách hàng trong phạm vi được Customer Manager phân công.
+
 Flow chăm sóc khách hàng đề xuất:
 
 ```text
 Khách hàng hoặc hệ thống phát sinh yêu cầu/sự kiện
 → Tạo ticket hoặc customer interaction
-→ Customer Service Manager/hệ thống phân công nhân viên
-→ Customer Service Staff tiếp nhận và phân loại
+→ Customer Manager/hệ thống phân công Customer Sale
+→ Customer Sale tiếp nhận và phân loại
 → Tự xử lý hoặc chuyển Sales/Operations/Accounting
 → Theo dõi phản hồi từ bộ phận liên quan
 → Cập nhật và phản hồi khách hàng
@@ -331,6 +341,7 @@ Trạng thái ticket đề xuất:
 
 Giới hạn và kiểm soát đề xuất:
 
+- Customer Manager chỉ có quyền quản lý trong phạm vi chức năng Customer Service; cấp Manager không đồng nghĩa với quyền truy cập mọi nghiệp vụ.
 - Không mặc định được xem giá hãng, giá gốc, margin hoặc toàn bộ dữ liệu công nợ.
 - Chỉ được xem phần giá bán, hóa đơn hoặc trạng thái công nợ khi cần giải đáp yêu cầu và được cấp quyền.
 - Không được tự sửa trạng thái vận hành; Customer Service sử dụng dữ liệu do Operations cung cấp.
@@ -342,10 +353,10 @@ Giới hạn và kiểm soát đề xuất:
 
 Các nội dung cần làm rõ:
 
-- Customer Service được phân công theo khách hàng, shipment, team Sales hay loại dịch vụ.
-- Customer Service Staff có được chủ động xem tất cả shipment của một khách hàng đang chăm sóc hay chỉ shipment được giao.
+- Customer Sale được phân công theo khách hàng, shipment, team Sales hay loại dịch vụ.
+- Customer Sale có được chủ động xem tất cả shipment của một khách hàng đang chăm sóc hay chỉ shipment được giao.
 - Thời gian phản hồi và xử lý cam kết cho từng mức độ ưu tiên.
-- Hạn mức hỗ trợ, giảm phí hoặc bồi thường của Staff và Manager.
+- Hạn mức hỗ trợ, giảm phí hoặc bồi thường của Customer Sale và Customer Manager.
 - Những nội dung nào được gửi tự động, nội dung nào cần nhân viên kiểm tra và nội dung nào cần Manager phê duyệt.
 - Sales và Customer Service phân chia trách nhiệm chăm sóc khách hàng như thế nào để tránh liên hệ trùng lặp.
 
@@ -683,13 +694,16 @@ Các điểm cần chốt tiếp theo:
 14. Các ngưỡng phê duyệt và nguyên tắc tách người tạo với người duyệt ở từng nghiệp vụ.
 15. Danh sách phòng ban nhận từng loại giá và mức độ chi tiết mà mỗi phòng ban được phép xem.
 16. Cơ cấu Operations Manager, Operations Staff và Pickup Staff; cơ chế phân công và dữ liệu tối thiểu để nhận booking.
-17. Cơ cấu Customer Service, quy tắc phân công ticket, SLA xử lý và hạn mức hỗ trợ hoặc bồi thường.
+17. Cơ cấu Customer Manager/Customer Sale, quy tắc phân công ticket, SLA xử lý và hạn mức hỗ trợ hoặc bồi thường.
 18. Ranh giới trách nhiệm chăm sóc khách hàng giữa Sales và Customer Service.
+19. Phạm vi khách hàng của Customer Service được phân công độc lập hay kế thừa từ team Sales tương ứng.
 
 ## 12. Nhật ký cập nhật
 
 | Ngày | Nội dung |
 |---|---|
+| 2026-07-10 | Xác nhận Customer Sale là cấp dưới trực tiếp của Customer Manager và thuộc chức năng Customer Service, tách biệt với Saler. |
+| 2026-07-10 | Xác nhận Customer Service Manager quản lý tương tự Sales Manager theo phạm vi team nhưng chỉ có quyền thuộc chức năng Customer Service. |
 | 2026-07-10 | Bổ sung đề xuất phân quyền Customer Service Manager và Customer Service Staff, flow ticket, escalation và giới hạn bồi thường. |
 | 2026-07-10 | Bổ sung đề xuất phân quyền Operations Manager, Operations Staff và Pickup Staff cùng flow bàn giao booking và thực hiện vận hành. |
 | 2026-07-10 | Xác nhận flow Pricing thu thập giá hãng, Ban Lãnh Đạo chốt giá gốc và Pricing công bố giá đã duyệt đến các phòng ban liên quan. |
