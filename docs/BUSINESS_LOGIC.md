@@ -270,20 +270,84 @@ Các nội dung cần làm rõ:
 
 #### Customer Service
 
-Phạm vi đề xuất:
+**Trạng thái: Đề xuất để thảo luận**
 
-- Xem thông tin liên hệ của khách hàng và các shipment được giao chăm sóc.
-- Theo dõi hành trình và cập nhật trạng thái cho khách hàng.
-- Gửi thông báo qua các kênh công ty cho phép.
-- Tiếp nhận, phân loại và xử lý yêu cầu hoặc khiếu nại.
-- Ghi nhận lịch sử trao đổi và mức độ hài lòng của khách hàng.
-- Phối hợp với Sales và Operations khi có sự cố.
+Nhóm Customer Service có thể được phân thành hai cấp account:
 
-Giới hạn đề xuất:
+##### Customer Service Manager
 
-- Không mặc định được xem giá gốc hoặc biên lợi nhuận.
-- Không được cam kết giảm giá hoặc bồi thường ngoài hạn mức cho phép.
-- Nội dung gửi hàng loạt hoặc nội dung nhạy cảm có thể cần phê duyệt.
+- Xem khách hàng, shipment, yêu cầu hỗ trợ và khiếu nại thuộc team hoặc phạm vi quản lý.
+- Phân công Customer Service Staff phụ trách khách hàng hoặc từng vụ việc.
+- Điều phối lại người phụ trách khi có quá tải, nghỉ phép hoặc sự cố.
+- Theo dõi thời gian phản hồi, thời gian xử lý và chất lượng chăm sóc.
+- Phê duyệt nội dung gửi hàng loạt, nội dung nhạy cảm hoặc chương trình chăm sóc theo quyền được cấp.
+- Phê duyệt phương án hỗ trợ, giảm phí hoặc bồi thường trong hạn mức.
+- Chuyển các trường hợp vượt hạn mức đến Ban Lãnh Đạo, Accounting, Sales Manager hoặc Operations Manager.
+- Xem báo cáo khiếu nại, nguyên nhân sự cố và mức độ hài lòng của khách hàng.
+
+##### Customer Service Staff
+
+- Chỉ xem khách hàng, shipment và yêu cầu hỗ trợ được giao cho mình, trừ khi được cấp phạm vi theo team.
+- Xem thông tin liên hệ và lịch sử trao đổi cần thiết để phục vụ khách hàng.
+- Theo dõi trạng thái shipment từ dữ liệu do Operations cập nhật.
+- Gửi thông báo trạng thái, lịch trình và sự cố qua các kênh công ty cho phép.
+- Tiếp nhận yêu cầu, câu hỏi và khiếu nại của khách hàng.
+- Phân loại mức độ ưu tiên và chuyển đúng bộ phận xử lý.
+- Ghi nhận toàn bộ trao đổi, cam kết và kết quả xử lý.
+- Gửi khảo sát và ghi nhận mức độ hài lòng sau khi hoàn tất.
+
+Flow chăm sóc khách hàng đề xuất:
+
+```text
+Khách hàng hoặc hệ thống phát sinh yêu cầu/sự kiện
+→ Tạo ticket hoặc customer interaction
+→ Customer Service Manager/hệ thống phân công nhân viên
+→ Customer Service Staff tiếp nhận và phân loại
+→ Tự xử lý hoặc chuyển Sales/Operations/Accounting
+→ Theo dõi phản hồi từ bộ phận liên quan
+→ Cập nhật và phản hồi khách hàng
+→ Xác nhận hoàn tất
+→ Gửi khảo sát và đóng ticket
+```
+
+Mức độ ưu tiên đề xuất:
+
+- **Low:** Yêu cầu thông tin thông thường, không ảnh hưởng shipment.
+- **Normal:** Yêu cầu cần xử lý trong thời gian tiêu chuẩn.
+- **High:** Có nguy cơ ảnh hưởng lịch trình, chi phí hoặc trải nghiệm khách hàng.
+- **Critical:** Hàng thất lạc, hư hỏng, trễ nghiêm trọng, tranh chấp hoặc khách hàng trọng yếu.
+
+Trạng thái ticket đề xuất:
+
+- **New:** Vừa tiếp nhận.
+- **Assigned:** Đã phân công nhân viên.
+- **In Progress:** Đang xử lý.
+- **Waiting Internal:** Đang chờ bộ phận nội bộ.
+- **Waiting Customer:** Đang chờ khách hàng cung cấp thông tin hoặc xác nhận.
+- **Escalated:** Đã chuyển lên cấp có thẩm quyền.
+- **Resolved:** Đã có phương án xử lý.
+- **Closed:** Khách hàng hoặc người có quyền đã xác nhận hoàn tất.
+- **Reopened:** Mở lại do vấn đề chưa được giải quyết.
+
+Giới hạn và kiểm soát đề xuất:
+
+- Không mặc định được xem giá hãng, giá gốc, margin hoặc toàn bộ dữ liệu công nợ.
+- Chỉ được xem phần giá bán, hóa đơn hoặc trạng thái công nợ khi cần giải đáp yêu cầu và được cấp quyền.
+- Không được tự sửa trạng thái vận hành; Customer Service sử dụng dữ liệu do Operations cung cấp.
+- Không được cam kết giảm giá, hoàn tiền hoặc bồi thường ngoài hạn mức.
+- Không được xóa lịch sử trao đổi hoặc khiếu nại đã phát sinh.
+- Nội dung gửi hàng loạt và mẫu nội dung nhạy cảm phải qua phê duyệt.
+- Mọi thông báo phải lưu người gửi, người nhận, nội dung, kênh, thời gian và kết quả gửi.
+- Mọi lần chuyển bộ phận, thay đổi mức ưu tiên, escalation và quyết định bồi thường phải có audit log.
+
+Các nội dung cần làm rõ:
+
+- Customer Service được phân công theo khách hàng, shipment, team Sales hay loại dịch vụ.
+- Customer Service Staff có được chủ động xem tất cả shipment của một khách hàng đang chăm sóc hay chỉ shipment được giao.
+- Thời gian phản hồi và xử lý cam kết cho từng mức độ ưu tiên.
+- Hạn mức hỗ trợ, giảm phí hoặc bồi thường của Staff và Manager.
+- Những nội dung nào được gửi tự động, nội dung nào cần nhân viên kiểm tra và nội dung nào cần Manager phê duyệt.
+- Sales và Customer Service phân chia trách nhiệm chăm sóc khách hàng như thế nào để tránh liên hệ trùng lặp.
 
 #### Accounting
 
@@ -619,11 +683,14 @@ Các điểm cần chốt tiếp theo:
 14. Các ngưỡng phê duyệt và nguyên tắc tách người tạo với người duyệt ở từng nghiệp vụ.
 15. Danh sách phòng ban nhận từng loại giá và mức độ chi tiết mà mỗi phòng ban được phép xem.
 16. Cơ cấu Operations Manager, Operations Staff và Pickup Staff; cơ chế phân công và dữ liệu tối thiểu để nhận booking.
+17. Cơ cấu Customer Service, quy tắc phân công ticket, SLA xử lý và hạn mức hỗ trợ hoặc bồi thường.
+18. Ranh giới trách nhiệm chăm sóc khách hàng giữa Sales và Customer Service.
 
 ## 12. Nhật ký cập nhật
 
 | Ngày | Nội dung |
 |---|---|
+| 2026-07-10 | Bổ sung đề xuất phân quyền Customer Service Manager và Customer Service Staff, flow ticket, escalation và giới hạn bồi thường. |
 | 2026-07-10 | Bổ sung đề xuất phân quyền Operations Manager, Operations Staff và Pickup Staff cùng flow bàn giao booking và thực hiện vận hành. |
 | 2026-07-10 | Xác nhận flow Pricing thu thập giá hãng, Ban Lãnh Đạo chốt giá gốc và Pricing công bố giá đã duyệt đến các phòng ban liên quan. |
 | 2026-07-10 | Bổ sung khung đề xuất để phân tích quyền của Ban Lãnh Đạo, Pricing, Operations/Pickup, Customer Service, Accounting và Admin hệ thống. |
