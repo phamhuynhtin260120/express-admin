@@ -27,3 +27,7 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# Do not push internal system documentation to the repository.
+/docs/*.md
+!/docs/BUSINESS_LOGIC.md

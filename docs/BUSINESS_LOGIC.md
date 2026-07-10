@@ -41,7 +41,52 @@ Tên gọi tiếng Anh phù hợp cho phạm vi sản phẩm: **Logistics Operat
 - **Customer Service:** Theo dõi hành trình, cập nhật cho khách hàng và xử lý sự cố.
 - **Manager:** Phê duyệt các trường hợp đặc biệt như giảm giá, margin thấp, chuyển giao khách hàng, hủy đơn hoặc vượt hạn mức tín dụng.
 
-Một người dùng có thể đảm nhiệm nhiều vai trò. Quyền truy cập nên được kiểm soát theo hành động và phạm vi dữ liệu, không chỉ dựa trên tên vai trò.
+Một Staff có thể đảm nhiệm nhiều vai trò. Quyền truy cập nên được kiểm soát theo hành động và phạm vi dữ liệu, không chỉ dựa trên tên vai trò.
+
+### 3.1.1. Quy ước phân biệt Customer và Staff
+
+**Trạng thái: Đã xác nhận**
+
+Hệ thống phải phân biệt rõ hai nhóm đối tượng nghiệp vụ:
+
+- **Staff:** Nhân sự nội bộ hoặc đối tác vận hành được cấp quyền sử dụng hệ thống, ví dụ Ban Lãnh Đạo, System Admin, Sales, Pricing, Operations, Pickup, Customer Service và Accounting.
+- **Customer:** Khách hàng doanh nghiệp hoặc cá nhân được quản lý trong CRM. Customer không phải là Staff và không tham gia hệ thống phân quyền nội bộ của Staff.
+
+Không sử dụng `User` như một thuật ngữ nghiệp vụ chung để chỉ đồng thời Staff và Customer. Thuật ngữ kỹ thuật của framework như `Authenticatable` có thể tiếp tục được sử dụng ở lớp hạ tầng, nhưng model, controller, policy và quy tắc nghiệp vụ phải thể hiện đúng đối tượng Staff hoặc Customer.
+
+Quy ước tên đề xuất cho source code:
+
+| Khái niệm | Tên sử dụng |
+|---|---|
+| Nhân sự sử dụng hệ thống nội bộ | `Staff` |
+| Vai trò của nhân sự | `StaffRole` |
+| Quyền thực hiện hành động | `StaffPermission` |
+| Phạm vi dữ liệu | `StaffDataScope` |
+| Khách hàng | `Customer` |
+| Người liên hệ của khách hàng | `CustomerContact` |
+| Tài khoản cổng thông tin khách hàng nếu được triển khai | `CustomerPortalAccount` |
+
+### 3.1.2. Mô hình kiểm soát quyền Staff
+
+**Trạng thái: Đề xuất đang thảo luận**
+
+Quyền thực tế của Staff không nên được quyết định chỉ bởi một loại account hoặc một role. Mỗi hành động cần được kiểm tra theo công thức:
+
+```text
+Staff Permission
++ Staff Role
++ Staff Data Scope
++ Trạng thái nghiệp vụ
++ Hạn mức hoặc yêu cầu phê duyệt
+= Quyền thực tế của Staff
+```
+
+- `StaffPermission` là danh mục hành động chuẩn trong source code, đặt tên theo quy ước `{domain}.{resource}.{action}`.
+- `StaffRole` là tập hợp các permission và nên được quản lý trong database để có thể cấu hình.
+- Một Staff có thể đảm nhiệm nhiều role.
+- `StaffDataScope` dự kiến hỗ trợ các phạm vi `own`, `assigned`, `team`, `branch` và `company`.
+- Controller không kiểm tra trực tiếp tên role; Policy và lớp xử lý nghiệp vụ kiểm tra permission, data scope, trạng thái, hạn mức và approval.
+- System Admin có quyền quản trị kỹ thuật nhưng không mặc nhiên có quyền phê duyệt giá, thanh toán, công nợ hoặc các quyết định nghiệp vụ khác.
 
 ### 3.2. Phân cấp tài khoản Sales
 
@@ -130,6 +175,37 @@ Phạm vi:
 - Thiết lập chính sách biên lợi nhuận, mức giảm giá và hạn mức phê duyệt.
 - Phê duyệt các trường hợp ngoại lệ có ảnh hưởng lớn đến lợi nhuận hoặc rủi ro tài chính.
 - Không nhất thiết trực tiếp chỉnh sửa dữ liệu vận hành hằng ngày.
+
+#### Nhu cầu quản trị của Ban Lãnh Đạo
+
+**Trạng thái: Đề xuất đang thảo luận**
+
+Ban Lãnh Đạo chủ yếu quan tâm đến kết quả, rủi ro, hiệu suất và các điểm cần ra quyết định, thay vì trực tiếp xử lý chi tiết vận hành hằng ngày. Nhu cầu quản trị dự kiến gồm năm nhóm:
+
+1. **Tài chính:** Doanh thu, chi phí, lợi nhuận, margin, dòng tiền, công nợ, hạn mức tín dụng và so sánh kế hoạch với thực tế.
+2. **Năng suất:** Khối lượng công việc, thời gian xử lý, tỷ lệ chuyển đổi, mức độ quá tải và hiệu suất theo Staff, team, phòng ban hoặc chi nhánh.
+3. **Tiến trình:** Số lượng và thời gian tồn đọng tại từng bước Rate Inquiry, Pricing, Approval, Quotation, Booking, Shipment, Invoice và Payment.
+4. **KPI:** Chỉ số theo từng bộ phận; cần kết hợp số lượng, chất lượng, thời gian, lợi nhuận và rủi ro thay vì chỉ đo doanh thu hoặc số giao dịch.
+5. **Phê duyệt và cảnh báo:** Các trường hợp vượt hạn mức, margin thấp, công nợ quá hạn, shipment nghiêm trọng, điều chỉnh tài chính hoặc ngoại lệ cần quyết định.
+
+Dashboard của Ban Lãnh Đạo cần trả lời được bốn câu hỏi chính:
+
+```text
+Công ty đang tạo ra bao nhiêu doanh thu và lợi nhuận?
+Các bộ phận đang hoạt động hiệu quả như thế nào?
+Công việc đang bị nghẽn hoặc có rủi ro ở đâu?
+Những việc nào đang chờ Ban Lãnh Đạo quyết định?
+```
+
+Năng lực cốt lõi đề xuất của Ban Lãnh Đạo:
+
+- Quan sát hiệu quả toàn công ty hoặc trong phạm vi được giao.
+- Xem dữ liệu tài chính, vận hành, tiến trình và KPI.
+- Nhận cảnh báo và danh sách công việc chờ phê duyệt tập trung.
+- Phê duyệt ngoại lệ và thiết lập hạn mức cấp công ty.
+- Ủy quyền phê duyệt trong phạm vi và thời gian xác định.
+
+Ban Lãnh Đạo không mặc nhiên trực tiếp sửa shipment, báo giá đã phát hành, hóa đơn đã phát hành hoặc ghi nhận payment. Các thao tác chi tiết vẫn thuộc Staff chuyên trách và phải tuân thủ state transition, audit log cùng nguyên tắc tách nhiệm vụ.
 
 Các nội dung cần làm rõ:
 
@@ -754,6 +830,7 @@ Các điểm cần chốt tiếp theo:
 
 | Ngày | Nội dung |
 |---|---|
+| 2026-07-10 | Xác nhận phân biệt Customer và Staff; bổ sung quy ước thuật ngữ, đề xuất mô hình Staff Role/Permission/Data Scope và phân tích nhu cầu quản trị của Ban Lãnh Đạo. |
 | 2026-07-10 | Bổ sung ý tưởng kết nối trực tiếp Carrier API với UPS, FedEx và các hãng khác để lấy giá, tạo shipment và đồng bộ tracking. |
 | 2026-07-10 | Xác nhận Customer Sale là cấp dưới trực tiếp của Customer Manager và thuộc chức năng Customer Service, tách biệt với Saler. |
 | 2026-07-10 | Xác nhận Customer Service Manager quản lý tương tự Sales Manager theo phạm vi team nhưng chỉ có quyền thuộc chức năng Customer Service. |
