@@ -417,6 +417,7 @@ Pricing thu thập và chuẩn hóa giá hãng
 - CRM và quản lý khách hàng.
 - Phân công khách hàng cho Sales.
 - Kiểm tra giá và quản lý bảng giá.
+- Tích hợp API trực tiếp với các hãng vận chuyển.
 - Báo giá.
 - Booking.
 - Quản lý đơn hàng/lô hàng.
@@ -515,6 +516,56 @@ Tiếp nhận nhu cầu khách hàng
 ```
 
 Báo giá nên lưu bản chụp dữ liệu giá tại thời điểm phát hành. Việc thay đổi bảng giá gốc sau đó không được làm thay đổi báo giá lịch sử.
+
+### 6.4. Tích hợp API với hãng vận chuyển
+
+**Trạng thái: Đã xác nhận ở mức ý tưởng; phạm vi theo từng hãng cần làm rõ**
+
+Hệ thống dự kiến đăng ký quyền truy cập và kết nối trực tiếp API với các hãng vận chuyển như UPS, FedEx và các hãng khác trong tương lai.
+
+Các khả năng tích hợp tiềm năng:
+
+- Lấy giá hoặc phí vận chuyển theo nhu cầu cụ thể.
+- Kiểm tra dịch vụ khả dụng theo điểm đi, điểm đến và loại hàng.
+- Tạo booking hoặc shipment trên hệ thống của hãng.
+- Nhận mã vận đơn và tạo nhãn vận chuyển.
+- Hủy hoặc thay đổi shipment nếu API của hãng cho phép.
+- Theo dõi hành trình và trạng thái giao nhận.
+- Nhận sự kiện trạng thái tự động qua webhook nếu hãng hỗ trợ.
+- Tải hoặc đồng bộ chứng từ liên quan.
+- Đối soát dữ liệu giá, phụ phí và hóa đơn của hãng.
+
+Flow tích hợp đề xuất:
+
+```text
+Người dùng nhập nhu cầu vận chuyển
+→ Hệ thống chuẩn hóa dữ liệu
+→ Gọi API của các hãng được kết nối
+→ Nhận và lưu phản hồi gốc
+→ Chuẩn hóa kết quả về mô hình chung của hệ thống
+→ Pricing kiểm tra và gửi Ban Lãnh Đạo chốt giá
+→ Sau khi khách chấp nhận, Operations tạo shipment qua API
+→ Hệ thống đồng bộ tracking và thông báo các bên liên quan
+```
+
+Nguyên tắc đề xuất:
+
+- Mỗi hãng được triển khai qua một adapter riêng nhưng trả dữ liệu về một cấu trúc chung của hệ thống.
+- Thông tin xác thực API phải được mã hóa và chỉ account có quyền quản trị tích hợp mới được cấu hình.
+- Phải phân biệt dữ liệu do API hãng trả về, dữ liệu đã được Pricing chuẩn hóa và giá gốc đã được Ban Lãnh Đạo chốt.
+- Lưu request, response, thời gian gọi, kết quả và mã lỗi cần thiết để đối soát; thông tin nhạy cảm phải được che hoặc loại bỏ khỏi log.
+- Cần cơ chế thử lại, chống tạo trùng shipment và xử lý khi API hãng không khả dụng.
+- Trạng thái nhận từ các hãng phải được ánh xạ về bộ trạng thái chung nhưng vẫn giữ trạng thái gốc để truy vết.
+- Không tự động coi giá API là giá được phép bán khi chưa đi qua flow Pricing và phê duyệt đã thống nhất.
+
+Các nội dung cần làm rõ:
+
+- Hãng nào được ưu tiên tích hợp đầu tiên.
+- Công ty đã có tài khoản doanh nghiệp và quyền truy cập API của từng hãng hay chưa.
+- Giai đoạn đầu chỉ lấy giá và tracking hay triển khai cả tạo shipment, nhãn và hủy đơn.
+- Pricing có cần kiểm tra thủ công mọi giá API hay chỉ các trường hợp ngoại lệ.
+- Tần suất đồng bộ tracking và cơ chế webhook/polling theo từng hãng.
+- Dữ liệu nào được xem là nguồn chính khi trạng thái nội bộ khác trạng thái của hãng.
 
 ## 7. Báo giá, booking và đơn hàng
 
@@ -697,11 +748,13 @@ Các điểm cần chốt tiếp theo:
 17. Cơ cấu Customer Manager/Customer Sale, quy tắc phân công ticket, SLA xử lý và hạn mức hỗ trợ hoặc bồi thường.
 18. Ranh giới trách nhiệm chăm sóc khách hàng giữa Sales và Customer Service.
 19. Phạm vi khách hàng của Customer Service được phân công độc lập hay kế thừa từ team Sales tương ứng.
+20. Phạm vi và thứ tự ưu tiên tích hợp Carrier API với UPS, FedEx và các hãng khác.
 
 ## 12. Nhật ký cập nhật
 
 | Ngày | Nội dung |
 |---|---|
+| 2026-07-10 | Bổ sung ý tưởng kết nối trực tiếp Carrier API với UPS, FedEx và các hãng khác để lấy giá, tạo shipment và đồng bộ tracking. |
 | 2026-07-10 | Xác nhận Customer Sale là cấp dưới trực tiếp của Customer Manager và thuộc chức năng Customer Service, tách biệt với Saler. |
 | 2026-07-10 | Xác nhận Customer Service Manager quản lý tương tự Sales Manager theo phạm vi team nhưng chỉ có quyền thuộc chức năng Customer Service. |
 | 2026-07-10 | Bổ sung đề xuất phân quyền Customer Service Manager và Customer Service Staff, flow ticket, escalation và giới hạn bồi thường. |
